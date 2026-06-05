@@ -1,0 +1,53 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    },
+    "singleProjectMode": true
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "trends-commerce-dev",
+          "appId": "1:696831045521:android:e2b4342762ab08e4ef3430",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "trends-commerce-dev",
+          "appId": "1:696831045521:ios:96801e1b8dc73ed5ef3430",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "trends-commerce-dev",
+          "configurations": {
+            "android": "1:696831045521:android:e2b4342762ab08e4ef3430",
+            "ios": "1:696831045521:ios:96801e1b8dc73ed5ef3430"
+          }
+        }
+      }
+    }
+  }
+}

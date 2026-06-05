@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trends/analytics/analytics.dart';
 import 'package:trends/app/app.dart';
+import 'package:trends/core/firebase/firebase.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -21,13 +23,24 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-Future<void> bootstrap() async {
+Future<void> bootstrap({
+  Future<void> Function()? initializeFirebase,
+  AnalyticsRepository? analyticsRepository,
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Bloc.observer = const AppBlocObserver();
 
-  // Firebase.initializeApp() will be added in Phase 1.
-  // See cursor_analysis/04_firebase_setup.md
+  final firebaseInitializer =
+      initializeFirebase ?? FirebaseInitializer.initialize;
+  await firebaseInitializer();
 
-  runApp(const TrendsApp());
+  final analytics =
+      analyticsRepository ?? FirebaseAnalyticsRepository();
+
+  runApp(
+    TrendsApp(
+      analyticsRepository: analytics,
+    ),
+  );
 }
