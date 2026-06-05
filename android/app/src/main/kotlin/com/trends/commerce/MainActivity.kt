@@ -1,4 +1,4 @@
-package com.example.trends_e_commerce
+package com.trends.commerce
 
 import io.flutter.embedding.android.FlutterActivity
 

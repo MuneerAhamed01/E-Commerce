@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.trends_e_commerce"
+    namespace = "com.trends.commerce"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.trends_e_commerce"
+        applicationId = "com.trends.commerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
