@@ -38,15 +38,13 @@ All architecture and planning docs live in [`cursor_analysis/`](./cursor_analysi
 
 ## Current Phase
 
-**Phase 0 — Foundation:** Runnable app shell with VGV bootstrap pattern. Firebase integration starts in Phase 1.
+**Phase 1 — Full MVP:** Advanced VGV monorepo structure (`packages/`), all e-commerce features, Stitch UI. Phase 0 (foundation + Firebase) is complete.
 
-## Structure
+## Structure (target)
 
 ```text
-lib/
-├── main.dart
-├── bootstrap.dart
-├── app/
-├── home/
-└── theme/
+lib/                    # Feature presentation (BLoC, views)
+packages/               # app_ui, repositories, clients
+functions/              # Cloud Functions
+cursor_analysis/        # Architecture docs
 ```
