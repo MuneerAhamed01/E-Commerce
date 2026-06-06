@@ -99,6 +99,34 @@ class UserRepository {
     return user;
   }
 
+  /// Updates profile fields and refreshes the local cache.
+  Future<User> updateUser({
+    required String userId,
+    String? displayName,
+    String? phone,
+    UserPreferences? preferences,
+  }) async {
+    final updates = <String, dynamic>{
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+
+    if (displayName != null) updates['displayName'] = displayName;
+    if (phone != null) updates['phone'] = phone;
+    if (preferences != null) updates['preferences'] = preferences.toJson();
+
+    final docRef = _firestore.collection(User.collectionName).doc(userId);
+    await docRef.set(updates, SetOptions(merge: true));
+
+    final snapshot = await docRef.get();
+    if (!snapshot.exists) {
+      throw const UserRepositoryException('User profile not found.');
+    }
+
+    final user = User.fromFirestore(snapshot);
+    await _cacheUser(user);
+    return user;
+  }
+
   /// Clears cached profile data on sign-out.
   Future<void> clearCache({String? userId}) async {
     if (userId != null) {

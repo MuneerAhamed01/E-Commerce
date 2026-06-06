@@ -19,7 +19,17 @@ import 'package:flutter/material.dart';
 
 /// Design system gallery — previews all Aura Couture tokens and widgets.
 class ComponentShowcasePage extends StatefulWidget {
-  const ComponentShowcasePage({super.key});
+  const ComponentShowcasePage({
+    this.header,
+    this.onProfileTap,
+    super.key,
+  });
+
+  /// Optional content shown above the gallery (e.g. account shortcuts).
+  final Widget? header;
+
+  /// Called when the profile bottom-nav demo item is tapped.
+  final VoidCallback? onProfileTap;
 
   @override
   State<ComponentShowcasePage> createState() => _ComponentShowcasePageState();
@@ -39,6 +49,10 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
       body: ListView(
         padding: const EdgeInsets.all(TrendsSpacing.marginMobile),
         children: [
+          if (widget.header != null) ...[
+            widget.header!,
+            const SizedBox(height: TrendsSpacing.xl),
+          ],
           _Section(
             title: 'Brand',
             child: Text(
@@ -250,7 +264,13 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             title: 'Bottom navigation',
             child: TrendsBottomNav(
               currentIndex: _navIndex,
-              onTap: (i) => setState(() => _navIndex = i),
+              onTap: (i) {
+                if (i == 3 && widget.onProfileTap != null) {
+                  widget.onProfileTap!();
+                  return;
+                }
+                setState(() => _navIndex = i);
+              },
               items: const [
                 TrendsBottomNavItem(icon: Icons.home_outlined, label: 'Home'),
                 TrendsBottomNavItem(

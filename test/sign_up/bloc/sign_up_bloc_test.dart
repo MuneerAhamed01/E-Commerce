@@ -19,14 +19,12 @@ void main() {
       build: () => SignUpBloc(authenticationClient: authClient),
       act: (bloc) async {
         bloc
-          ..add(const SignUpDisplayNameChanged('Jane Doe'))
           ..add(const SignUpEmailChanged('jane@example.com'))
           ..add(const SignUpPasswordChanged('password123'))
           ..add(const SignUpConfirmedPasswordChanged('password123'))
           ..add(const SignUpSubmitted());
       },
       expect: () => [
-        isA<SignUpState>(),
         isA<SignUpState>(),
         isA<SignUpState>(),
         isA<SignUpState>(),

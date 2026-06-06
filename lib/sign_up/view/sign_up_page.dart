@@ -1,6 +1,10 @@
+import 'package:authentication_client/authentication_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trends/sign_up/bloc/sign_up_bloc.dart';
+import 'package:trends/sign_up/view/sign_up_view.dart';
 
-/// Placeholder sign-up page — replace with Stitch UI.
+/// Sign-up route entry — provides [SignUpBloc].
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
@@ -8,8 +12,11 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Register')),
+    return BlocProvider(
+      create: (context) => SignUpBloc(
+        authenticationClient: context.read<AuthenticationClient>(),
+      ),
+      child: const SignUpView(),
     );
   }
 }

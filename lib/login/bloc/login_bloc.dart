@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+import 'package:trends/auth/utils/auth_submission_method.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -27,6 +28,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       state.copyWith(
         email: email,
         status: FormzSubmissionStatus.initial,
+        submissionMethod: AuthSubmissionMethod.none,
         failure: null,
       ),
     );
@@ -41,6 +43,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       state.copyWith(
         password: password,
         status: FormzSubmissionStatus.initial,
+        submissionMethod: AuthSubmissionMethod.none,
         failure: null,
       ),
     );
@@ -62,6 +65,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         status: isValid
             ? FormzSubmissionStatus.inProgress
             : FormzSubmissionStatus.initial,
+        submissionMethod:
+            isValid ? AuthSubmissionMethod.email : AuthSubmissionMethod.none,
         failure: null,
       ),
     );
@@ -101,6 +106,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         status: FormzSubmissionStatus.inProgress,
+        submissionMethod: AuthSubmissionMethod.google,
         failure: null,
       ),
     );
@@ -109,7 +115,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on AuthFailure catch (failure) {
       if (failure.code == AuthFailureCode.cancelled) {
-        emit(state.copyWith(status: FormzSubmissionStatus.initial));
+        emit(
+          state.copyWith(
+            status: FormzSubmissionStatus.initial,
+            submissionMethod: AuthSubmissionMethod.none,
+          ),
+        );
         return;
       }
       emit(
@@ -128,6 +139,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         status: FormzSubmissionStatus.inProgress,
+        submissionMethod: AuthSubmissionMethod.apple,
         failure: null,
       ),
     );
@@ -136,7 +148,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on AuthFailure catch (failure) {
       if (failure.code == AuthFailureCode.cancelled) {
-        emit(state.copyWith(status: FormzSubmissionStatus.initial));
+        emit(
+          state.copyWith(
+            status: FormzSubmissionStatus.initial,
+            submissionMethod: AuthSubmissionMethod.none,
+          ),
+        );
         return;
       }
       emit(

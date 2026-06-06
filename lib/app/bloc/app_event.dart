@@ -26,3 +26,13 @@ final class AppUserChanged extends AppEvent {
 final class AppSignOutRequested extends AppEvent {
   const AppSignOutRequested();
 }
+
+/// Dispatched after profile is updated (e.g. onboarding complete).
+final class AppProfileUpdated extends AppEvent {
+  const AppProfileUpdated(this.user);
+
+  final User user;
+
+  @override
+  List<Object?> get props => [user];
+}

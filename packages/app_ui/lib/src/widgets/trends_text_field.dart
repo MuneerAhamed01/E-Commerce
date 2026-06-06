@@ -12,6 +12,7 @@ class TrendsTextField extends StatelessWidget {
     this.onChanged,
     this.errorText,
     this.prefixIcon,
+    this.suffixIcon,
     super.key,
   });
 
@@ -23,6 +24,7 @@ class TrendsTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final String? errorText;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class TrendsTextField extends StatelessWidget {
             hintText: hint,
             errorText: errorText,
             prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
           ),
         ),
       ],

@@ -48,3 +48,6 @@ app.*.map.json
 .fvm/
 
 cursor_analysis
+
+# Firebase service account (never commit)
+functions/service-account.json

@@ -19,6 +19,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppStarted>(_onStarted);
     on<AppUserChanged>(_onUserChanged);
     on<AppSignOutRequested>(_onSignOutRequested);
+    on<AppProfileUpdated>(_onProfileUpdated);
   }
 
   final AuthenticationClient _authenticationClient;
@@ -75,6 +76,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     Emitter<AppState> emit,
   ) async {
     await _authenticationClient.signOut();
+  }
+
+  void _onProfileUpdated(AppProfileUpdated event, Emitter<AppState> emit) {
+    emit(AppState.authenticated(event.user));
   }
 
   @override

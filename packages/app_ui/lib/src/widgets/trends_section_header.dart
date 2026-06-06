@@ -7,18 +7,20 @@ class TrendsSectionHeader extends StatelessWidget {
     required this.title,
     this.actionLabel,
     this.onActionTap,
+    this.padding,
     super.key,
   });
 
   final String title;
   final String? actionLabel;
   final VoidCallback? onActionTap;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
+    final row = Row(
       children: [
         Expanded(
           child: Text(
@@ -36,5 +38,10 @@ class TrendsSectionHeader extends StatelessWidget {
           ),
       ],
     );
+
+    if (padding != null) {
+      return Padding(padding: padding!, child: row);
+    }
+    return row;
   }
 }

@@ -13,6 +13,7 @@ class TrendsButton extends StatelessWidget {
     this.variant = TrendsButtonVariant.primary,
     this.isLoading = false,
     this.expand = true,
+    this.leading,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class TrendsButton extends StatelessWidget {
   final TrendsButtonVariant variant;
   final bool isLoading;
   final bool expand;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +38,21 @@ class TrendsButton extends StatelessWidget {
               color: isPrimary ? Colors.white : trends.charcoal,
             ),
           )
-        : Text(
-            label,
-            style: TrendsTypography.labelMedium(
-              isPrimary ? Colors.white : trends.charcoal,
-            ),
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (leading != null) ...[
+                leading!,
+                const SizedBox(width: 12),
+              ],
+              Text(
+                label,
+                style: TrendsTypography.labelMedium(
+                  isPrimary ? Colors.white : trends.charcoal,
+                ),
+              ),
+            ],
           );
 
     final button = isPrimary

@@ -10,15 +10,19 @@ class TrendsBadge extends StatelessWidget {
   const TrendsBadge({
     required this.label,
     this.variant = TrendsBadgeVariant.gold,
+    this.backgroundColor,
+    this.foregroundColor,
     super.key,
   });
 
   final String label;
   final TrendsBadgeVariant variant;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final (background, foreground) = switch (variant) {
+    final (defaultBg, defaultFg) = switch (variant) {
       TrendsBadgeVariant.gold => (TrendsColors.gold, TrendsColors.white),
       TrendsBadgeVariant.charcoal => (
         TrendsColors.charcoal,
@@ -33,12 +37,12 @@ class TrendsBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: background,
+        color: backgroundColor ?? defaultBg,
         borderRadius: TrendsRadius.pillBorder,
       ),
       child: Text(
         label,
-        style: TrendsTypography.labelSmall(foreground),
+        style: TrendsTypography.labelSmall(foregroundColor ?? defaultFg),
       ),
     );
   }

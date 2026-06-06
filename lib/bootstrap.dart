@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:app_ui/app_ui.dart';
 import 'package:authentication_client/authentication_client.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cart_repository/cart_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_authentication_client/firebase_authentication_client.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:order_repository/order_repository.dart';
 import 'package:persistent_storage/persistent_storage.dart';
+import 'package:product_repository/product_repository.dart';
 import 'package:trends/analytics/analytics.dart';
 import 'package:trends/app/app.dart';
-import 'package:trends/app/bloc/app_bloc.dart';
-import 'package:trends/app/router/app_router.dart';
 import 'package:trends/core/firebase/firebase.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -38,6 +38,9 @@ class AppDependencies {
     required this.analyticsRepository,
     required this.authenticationClient,
     required this.userRepository,
+    required this.productRepository,
+    required this.cartRepository,
+    required this.orderRepository,
     required this.persistentStorage,
     required this.appBloc,
     required this.router,
@@ -46,6 +49,9 @@ class AppDependencies {
   final AnalyticsRepository analyticsRepository;
   final AuthenticationClient authenticationClient;
   final UserRepository userRepository;
+  final ProductRepository productRepository;
+  final CartRepository cartRepository;
+  final OrderRepository orderRepository;
   final PersistentStorage persistentStorage;
   final AppBloc appBloc;
   final GoRouter router;
@@ -55,35 +61,42 @@ Future<AppDependencies> createAppDependencies({
   AnalyticsRepository? analyticsRepository,
   AuthenticationClient? authenticationClient,
   UserRepository? userRepository,
+  ProductRepository? productRepository,
+  CartRepository? cartRepository,
+  OrderRepository? orderRepository,
   PersistentStorage? persistentStorage,
   AppBloc? appBloc,
-  Widget? homePage,
 }) async {
   final storage = persistentStorage ?? await SharedPreferencesStorage.create();
   final authClient = authenticationClient ?? FirebaseAuthenticationClient();
-  final users = userRepository ??
+  final firestore = FirebaseFirestore.instance;
+  final users =
+      userRepository ??
       UserRepository(
-        firestore: FirebaseFirestore.instance,
+        firestore: firestore,
         storage: storage,
       );
+  final products = productRepository ?? ProductRepository(firestore: firestore);
+  final cart = cartRepository ?? CartRepository(firestore: firestore);
+  final orders = orderRepository ?? OrderRepository(firestore: firestore);
   final analytics = analyticsRepository ?? FirebaseAnalyticsRepository();
   final bloc =
       appBloc ??
-      AppBloc(
-        authenticationClient: authClient,
-        userRepository: users,
-      );
-  bloc.add(const AppStarted());
+            AppBloc(
+              authenticationClient: authClient,
+              userRepository: users,
+            )
+        ..add(const AppStarted());
 
-  final router = createAppRouter(
-    appBloc: bloc,
-    homePage: homePage ?? const ComponentShowcasePage(),
-  );
+  final router = createAppRouter(appBloc: bloc);
 
   return AppDependencies(
     analyticsRepository: analytics,
     authenticationClient: authClient,
     userRepository: users,
+    productRepository: products,
+    cartRepository: cart,
+    orderRepository: orders,
     persistentStorage: storage,
     appBloc: bloc,
     router: router,
@@ -97,7 +110,6 @@ Future<void> bootstrap({
   UserRepository? userRepository,
   PersistentStorage? persistentStorage,
   AppBloc? appBloc,
-  Widget? homePage,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -114,7 +126,6 @@ Future<void> bootstrap({
     userRepository: userRepository,
     persistentStorage: persistentStorage,
     appBloc: appBloc,
-    homePage: homePage,
   );
 
   runApp(
@@ -122,6 +133,9 @@ Future<void> bootstrap({
       analyticsRepository: dependencies.analyticsRepository,
       authenticationClient: dependencies.authenticationClient,
       userRepository: dependencies.userRepository,
+      productRepository: dependencies.productRepository,
+      cartRepository: dependencies.cartRepository,
+      orderRepository: dependencies.orderRepository,
       persistentStorage: dependencies.persistentStorage,
       appBloc: dependencies.appBloc,
       router: dependencies.router,

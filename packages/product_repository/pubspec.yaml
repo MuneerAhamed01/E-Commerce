@@ -1,0 +1,19 @@
+name: product_repository
+description: Firestore product catalog repository — products, categories, brands, banners.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cloud_firestore: ^6.5.0
+  equatable: ^2.0.7
+
+dev_dependencies:
+  fake_cloud_firestore: ^4.0.1
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0

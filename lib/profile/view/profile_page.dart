@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trends/profile/view/profile_view.dart';
 
-/// Placeholder profile page — replace with Stitch UI.
+/// Profile route entry.
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -8,8 +9,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Profile')),
-    );
+    return const ProfileView();
   }
 }

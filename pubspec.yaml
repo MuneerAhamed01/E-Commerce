@@ -12,6 +12,9 @@ dependencies:
   authentication_client:
     path: packages/authentication_client
   bloc: ^9.2.0
+  cached_network_image: ^3.4.1
+  cart_repository:
+    path: packages/cart_repository
   cloud_firestore: ^6.5.0
   equatable: ^2.0.7
   firebase_analytics: ^12.4.2
@@ -29,12 +32,18 @@ dependencies:
   formz: ^0.8.0
   go_router: ^14.8.1
   google_sign_in: ^6.3.0
+  intl: ^0.20.2
+  order_repository:
+    path: packages/order_repository
   persistent_storage:
     path: packages/persistent_storage
+  product_repository:
+    path: packages/product_repository
   shared_preferences: ^2.5.3
   sign_in_with_apple: ^7.0.1
   user_repository:
     path: packages/user_repository
+  uuid: ^4.5.1
 
 dev_dependencies:
   bloc_test: ^10.0.0

@@ -17,12 +17,15 @@ class TrendsBottomNav extends StatelessWidget {
     required this.currentIndex,
     required this.items,
     required this.onTap,
+    this.cartBadgeCount = 0,
     super.key,
   });
 
   final int currentIndex;
   final List<TrendsBottomNavItem> items;
   final ValueChanged<int> onTap;
+  /// When > 0 a badge is shown on the cart tab (index 2).
+  final int cartBadgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +35,18 @@ class TrendsBottomNav extends StatelessWidget {
       items: [
         for (var i = 0; i < items.length; i++)
           BottomNavigationBarItem(
-            icon: _NavIcon(
-              icon: items[i].icon,
-              isSelected: currentIndex == i,
-            ),
+            icon: i == 2 && cartBadgeCount > 0
+                ? Badge(
+                    label: Text('$cartBadgeCount'),
+                    child: _NavIcon(
+                      icon: items[i].icon,
+                      isSelected: currentIndex == i,
+                    ),
+                  )
+                : _NavIcon(
+                    icon: items[i].icon,
+                    isSelected: currentIndex == i,
+                  ),
             label: items[i].label,
           ),
       ],

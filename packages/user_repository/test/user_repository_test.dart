@@ -75,5 +75,31 @@ void main() {
       final cached = await repository.getLastCachedUser();
       expect(cached?.email, 'cached@example.com');
     });
+
+    test('updateUser merges fields and refreshes cache', () async {
+      await repository.ensureUserDocument(
+        userId: 'uid-5',
+        email: 'user@example.com',
+        displayName: 'Old Name',
+      );
+
+      final updated = await repository.updateUser(
+        userId: 'uid-5',
+        displayName: 'New Name',
+        phone: '+911234567890',
+        preferences: const UserPreferences(marketingOptIn: true),
+      );
+
+      expect(updated.displayName, 'New Name');
+      expect(updated.phone, '+911234567890');
+      expect(updated.preferences.marketingOptIn, isTrue);
+
+      final cached = await repository.getCachedUser('uid-5');
+      expect(cached?.displayName, 'New Name');
+
+      final snapshot = await firestore.collection('users').doc('uid-5').get();
+      expect(snapshot.data()?['displayName'], 'New Name');
+      expect(snapshot.data()?['phone'], '+911234567890');
+    });
   });
 }

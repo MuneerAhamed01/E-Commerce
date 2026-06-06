@@ -10,6 +10,7 @@ class TrendsSearchField extends StatelessWidget {
     this.hint = 'Search products',
     this.onChanged,
     this.onSubmitted,
+    this.onClear,
     super.key,
   });
 
@@ -17,11 +18,13 @@ class TrendsSearchField extends StatelessWidget {
   final String hint;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onClear;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      autofocus: true,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       style: TrendsTypography.bodyMedium(TrendsColors.onSurface),
@@ -31,6 +34,12 @@ class TrendsSearchField extends StatelessWidget {
           Icons.search,
           color: TrendsColors.onSurfaceVariant,
         ),
+        suffixIcon: onClear != null
+            ? IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: onClear,
+              )
+            : null,
         filled: true,
         fillColor: TrendsColors.surfaceContainerLowest,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
