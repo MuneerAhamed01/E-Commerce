@@ -1,0 +1,22 @@
+name: user_repository
+description: Firestore user profile repository with local cache.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cloud_firestore: ^6.5.0
+  equatable: ^2.0.7
+  persistent_storage:
+    path: ../persistent_storage
+
+dev_dependencies:
+  fake_cloud_firestore: ^4.0.1
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.2.0

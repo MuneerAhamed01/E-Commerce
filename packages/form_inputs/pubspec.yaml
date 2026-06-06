@@ -1,0 +1,14 @@
+name: form_inputs
+description: Reusable Formz input validators for authentication forms.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  formz: ^0.8.0
+
+dev_dependencies:
+  test: ^1.26.2
+  very_good_analysis: ^10.2.0
