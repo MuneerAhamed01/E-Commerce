@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trends/app/router/app_router.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/search/cubit/search_cubit.dart';
 
 class SearchPage extends StatelessWidget {
@@ -80,8 +81,11 @@ class _SearchViewState extends State<_SearchView> {
             return const Center(child: TrendsLoader());
           }
           if (state.status == SearchStatus.failure) {
-            return const TrendsErrorView(
+            return TrendsErrorView(
               message: 'Search failed. Try again.',
+              onRetry: () => context.read<SearchCubit>().search(state.query),
+              onContactSupport: () =>
+                  TrendsErrorHandler.showContactSupport(context),
             );
           }
           if (state.results.isEmpty) {

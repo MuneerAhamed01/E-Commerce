@@ -8,11 +8,15 @@ class TrendsErrorView extends StatelessWidget {
   const TrendsErrorView({
     required this.message,
     this.onRetry,
+    this.onContactSupport,
+    this.contactLabel = 'Connect with us',
     super.key,
   });
 
   final String message;
   final VoidCallback? onRetry;
+  final VoidCallback? onContactSupport;
+  final String contactLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,13 @@ class TrendsErrorView extends StatelessWidget {
                 label: 'Try again',
                 onPressed: onRetry,
                 expand: false,
+              ),
+            ],
+            if (onContactSupport != null) ...[
+              const SizedBox(height: TrendsSpacing.sm),
+              TextButton(
+                onPressed: onContactSupport,
+                child: Text(contactLabel),
               ),
             ],
           ],

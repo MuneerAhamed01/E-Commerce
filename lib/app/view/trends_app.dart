@@ -25,6 +25,7 @@ class TrendsApp extends StatelessWidget {
     required this.persistentStorage,
     required this.appBloc,
     required this.router,
+    this.firestore,
     super.key,
   });
 
@@ -37,6 +38,7 @@ class TrendsApp extends StatelessWidget {
   final PersistentStorage persistentStorage;
   final AppBloc appBloc;
   final GoRouter router;
+  final FirebaseFirestore? firestore;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class TrendsApp extends StatelessWidget {
           value: persistentStorage,
         ),
         RepositoryProvider<FirebaseFirestore>(
-          create: (_) => FirebaseFirestore.instance,
+          create: (_) => firestore ?? FirebaseFirestore.instance,
         ),
       ],
       child: MultiBlocProvider(
@@ -78,7 +80,7 @@ class TrendsApp extends StatelessWidget {
           ),
           BlocProvider<WishlistCubit>(
             create: (context) => WishlistCubit(
-              firestore: FirebaseFirestore.instance,
+              firestore: context.read<FirebaseFirestore>(),
               productRepository: productRepository,
             ),
           ),

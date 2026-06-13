@@ -5,12 +5,18 @@ import 'package:user_repository/src/user_preferences.dart';
 
 /// Thrown when a user profile cannot be loaded or saved.
 class UserRepositoryException implements Exception {
-  const UserRepositoryException(this.message);
+  const UserRepositoryException(this.message, {this.cause});
 
   final String message;
+  final Object? cause;
 
   @override
-  String toString() => 'UserRepositoryException: $message';
+  String toString() {
+    if (cause != null) {
+      return 'UserRepositoryException: $message ($cause)';
+    }
+    return 'UserRepositoryException: $message';
+  }
 }
 
 /// Reads and caches Firestore user profiles.
@@ -45,17 +51,70 @@ class UserRepository {
   }
 
   /// Fetches a user profile from Firestore and updates the local cache.
+  ///
+  /// Returns null when the document is missing or cannot be read yet (e.g.
+  /// auth token still propagating after sign-up).
   Future<User?> getUser(String userId) async {
-    final snapshot = await _firestore
-        .collection(User.collectionName)
-        .doc(userId)
-        .get();
+    try {
+      final snapshot = await _firestore
+          .collection(User.collectionName)
+          .doc(userId)
+          .get();
 
-    if (!snapshot.exists) return null;
+      if (!snapshot.exists) return null;
 
-    final user = User.fromFirestore(snapshot);
-    await _cacheUser(user);
-    return user;
+      final user = User.fromFirestore(snapshot);
+      await _cacheUser(user);
+      return user;
+    } on FirebaseException catch (error) {
+      if (error.code == 'permission-denied' ||
+          error.code == 'unauthenticated' ||
+          error.code == 'unavailable') {
+        return null;
+      }
+      rethrow;
+    }
+  }
+
+  /// Loads an existing profile or creates one for a newly signed-in user.
+  ///
+  /// Retries briefly so Firestore sees the auth token right after sign-up.
+  Future<User> loadOrCreateUser({
+    required String userId,
+    String? email,
+    String? displayName,
+    String? photoUrl,
+    String? phone,
+  }) async {
+    const maxAttempts = 3;
+    Object? lastError;
+
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        final existing = await getUser(userId);
+        if (existing != null) return existing;
+
+        return await ensureUserDocument(
+          userId: userId,
+          email: email,
+          displayName: displayName,
+          photoUrl: photoUrl,
+          phone: phone,
+        );
+      } catch (error) {
+        lastError = error;
+        if (attempt < maxAttempts - 1) {
+          await Future<void>.delayed(
+            Duration(milliseconds: 250 * (attempt + 1)),
+          );
+        }
+      }
+    }
+
+    throw UserRepositoryException(
+      'Could not load or create user profile.',
+      cause: lastError,
+    );
   }
 
   /// Ensures a user document exists (dev fallback when Cloud Function

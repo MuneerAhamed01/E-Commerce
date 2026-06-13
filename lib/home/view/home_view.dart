@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:trends/app/router/app_router.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/home/cubit/home_cubit.dart';
 
 class HomeView extends StatefulWidget {
@@ -52,6 +53,8 @@ class _HomeViewState extends State<HomeView> {
                   child: TrendsErrorView(
                     message: 'Could not load the store. Pull to retry.',
                     onRetry: context.read<HomeCubit>().refresh,
+                    onContactSupport: () =>
+                        TrendsErrorHandler.showContactSupport(context),
                   ),
                 )
               else ...[

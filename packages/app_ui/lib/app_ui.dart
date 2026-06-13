@@ -15,6 +15,7 @@ export 'src/widgets/trends_badge.dart';
 export 'src/widgets/trends_bottom_nav.dart';
 export 'src/widgets/trends_button.dart';
 export 'src/widgets/trends_empty_state.dart';
+export 'src/widgets/trends_error_sheet.dart';
 export 'src/widgets/trends_error_view.dart';
 export 'src/widgets/trends_loader.dart';
 export 'src/widgets/trends_search_field.dart';

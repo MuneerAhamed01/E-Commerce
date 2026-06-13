@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:trends/app/bloc/app_bloc.dart';
 import 'package:trends/cart/bloc/cart_bloc.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/product_detail/cubit/product_detail_cubit.dart';
 import 'package:trends/wishlist/cubit/wishlist_cubit.dart';
 
@@ -596,17 +597,12 @@ class _AddToCartBar extends StatelessWidget {
                       quantity: state.quantity,
                     ),
                   );
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text('${product.name} added to cart'),
-                        action: SnackBarAction(
-                          label: 'View Cart',
-                          onPressed: () => context.go('/cart'),
-                        ),
-                      ),
-                    );
+                  TrendsErrorHandler.showSuccess(
+                    context,
+                    '${product.name} added to cart',
+                    actionLabel: 'View Cart',
+                    onAction: () => context.go('/cart'),
+                  );
                 },
         ),
       ),

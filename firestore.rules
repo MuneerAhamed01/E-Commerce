@@ -21,6 +21,11 @@ service cloud.firestore {
     match /products/{productId} {
       allow read: if isPublishedProduct() || isAdmin();
       allow write: if isAdmin();
+
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
     }
 
     match /categories/{categoryId} {
@@ -74,12 +79,18 @@ service cloud.firestore {
     }
 
     match /coupons/{couponId} {
-      allow read, write: if isAdmin();
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
 
     match /notifications/{notificationId} {
       allow read: if isSignedIn()
         && resource.data.userId == request.auth.uid;
+      allow write: if isAdmin();
+    }
+
+    match /meta/{docId} {
+      allow read: if true;
       allow write: if isAdmin();
     }
   }

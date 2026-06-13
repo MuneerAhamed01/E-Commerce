@@ -2,6 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/app/bloc/app_bloc.dart';
 import 'package:trends/app/router/app_router.dart';
 
@@ -97,6 +98,12 @@ class ProfileView extends StatelessWidget {
                 onPressed: () => context.push(
                   '${AppRoutes.onboarding}?edit=true',
                 ),
+              ),
+              const SizedBox(height: TrendsSpacing.md),
+              TrendsButton(
+                label: 'Production & integrations',
+                variant: TrendsButtonVariant.secondary,
+                onPressed: () => TrendsErrorHandler.showContactSupport(context),
               ),
               const SizedBox(height: TrendsSpacing.md),
               TrendsButton(

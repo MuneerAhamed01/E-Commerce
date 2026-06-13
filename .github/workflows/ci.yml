@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run app tests
+        run: flutter test
+
+      - name: Run package tests
+        run: |
+          for dir in packages/*/; do
+            if [ -f "${dir}pubspec.yaml" ] && [ -d "${dir}test" ]; then
+              echo "Testing ${dir}"
+              (cd "$dir" && flutter pub get && flutter test)
+            fi
+          done

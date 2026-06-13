@@ -69,16 +69,19 @@ Future<AppDependencies> createAppDependencies({
 }) async {
   final storage = persistentStorage ?? await SharedPreferencesStorage.create();
   final authClient = authenticationClient ?? FirebaseAuthenticationClient();
-  final firestore = FirebaseFirestore.instance;
   final users =
       userRepository ??
       UserRepository(
-        firestore: firestore,
+        firestore: FirebaseFirestore.instance,
         storage: storage,
       );
-  final products = productRepository ?? ProductRepository(firestore: firestore);
-  final cart = cartRepository ?? CartRepository(firestore: firestore);
-  final orders = orderRepository ?? OrderRepository(firestore: firestore);
+  final products =
+      productRepository ??
+      ProductRepository(firestore: FirebaseFirestore.instance);
+  final cart =
+      cartRepository ?? CartRepository(firestore: FirebaseFirestore.instance);
+  final orders =
+      orderRepository ?? OrderRepository(firestore: FirebaseFirestore.instance);
   final analytics = analyticsRepository ?? FirebaseAnalyticsRepository();
   final bloc =
       appBloc ??

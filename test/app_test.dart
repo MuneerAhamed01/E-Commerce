@@ -42,6 +42,7 @@ void main() {
         persistentStorage: dependencies.persistentStorage,
         appBloc: dependencies.appBloc,
         router: dependencies.router,
+        firestore: fakeFirestore,
       ),
     );
     await tester.pumpAndSettle();

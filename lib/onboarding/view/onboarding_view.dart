@@ -7,6 +7,7 @@ import 'package:trends/app/bloc/app_bloc.dart';
 import 'package:trends/app/router/app_router.dart';
 import 'package:trends/auth/utils/form_field_errors.dart';
 import 'package:trends/auth/widgets/auth_scaffold.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/onboarding/bloc/onboarding_bloc.dart';
 
 class OnboardingView extends StatelessWidget {
@@ -19,11 +20,15 @@ class OnboardingView extends StatelessWidget {
       listener: (context, state) {
         if (state.status == FormzSubmissionStatus.failure &&
             state.errorMessage != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(state.errorMessage!)),
-            );
+          TrendsErrorHandler.show(
+            context,
+            title: 'Profile not saved',
+            message: state.errorMessage,
+            showContactSupport: true,
+            onRetry: () => context.read<OnboardingBloc>().add(
+              const OnboardingSubmitted(),
+            ),
+          );
         }
         if (state.status == FormzSubmissionStatus.success &&
             state.completedUser != null) {

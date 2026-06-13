@@ -1,50 +1,119 @@
 # Trends
 
-Production-grade e-commerce platform built with **Flutter** and **Firebase**, following [Very Good Ventures layered architecture](https://verygood.ventures/blog/very-good-flutter-architecture/).
+A production-style **Flutter e-commerce app** with **Firebase**, built using [Very Good Ventures layered architecture](https://verygood.ventures/blog/very-good-flutter-architecture/).
 
-## Quick Start
+Built as a portfolio piece demonstrating mobile architecture, Firebase integration, and end-to-end shopping flows.
 
-```bash
-# Use FVM Flutter version (3.44.1)
-fvm flutter pub get
-fvm flutter run
+![Flutter](https://img.shields.io/badge/Flutter-3.44+-02569B?logo=flutter)
+![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20Functions-FFCA28?logo=firebase)
+![CI](https://img.shields.io/badge/CI-analyze%20%2B%20test-blue)
+
+## Highlights
+
+- **Monorepo packages** — `app_ui`, repository layer, auth client abstraction
+- **State management** — `flutter_bloc` with Formz-validated auth forms
+- **Navigation** — `go_router` with auth-aware redirects and onboarding gate
+- **Firebase** — Auth (email, Google, Apple), Firestore, Cloud Functions, Analytics, Crashlytics
+- **E-commerce flows** — Home, catalog, search, product detail, cart, wishlist, checkout, orders
+- **Design system** — Aura Couture tokens and reusable widgets in `packages/app_ui`
+- **Security** — Owner-based Firestore and Storage rules (not open access)
+
+## Screens & features
+
+| Feature | Description |
+|---------|-------------|
+| Auth | Email/password, Google, Apple, forgot password |
+| Onboarding | Profile completion after first sign-in |
+| Home | Banners, categories, featured & new arrivals |
+| Catalog & search | Category browsing, Firestore prefix search |
+| Product detail | Variants, reviews, add to cart / wishlist |
+| Cart | Quantity updates, coupon support, badge |
+| Checkout | Addresses, order summary, COD placement |
+| Orders | Order history and detail |
+| Profile | Account info and sign-out |
+
+## Architecture
+
+```text
+lib/                         # Feature UI + BLoC/Cubit
+packages/
+  app_ui/                    # Design system
+  authentication_client/     # Auth abstraction
+  firebase_authentication_client/
+  user_repository/
+  product_repository/
+  cart_repository/
+  order_repository/
+  form_inputs/
+  persistent_storage/
+functions/                   # Cloud Functions + seed scripts
 ```
 
-## Project Identity
+**Data flow:** Presentation → BLoC → Repository → Firebase
+
+## Quick start
+
+```bash
+flutter pub get
+flutter run
+```
+
+### Backend setup (required for full demo)
+
+```bash
+npx firebase-tools@latest deploy --only firestore:rules,firestore:indexes,storage,functions:onUserCreated
+cd functions && npm install && npm run seed -- --force
+```
+
+See **[docs/DEMO.md](./docs/DEMO.md)** for the full client demo script.
+
+### Local emulators (optional)
+
+```bash
+firebase emulators:start
+flutter run --dart-define=USE_FIREBASE_EMULATORS=true
+```
+
+## Development
+
+```bash
+flutter analyze
+flutter test
+
+# Package tests
+cd packages/user_repository && flutter test
+```
+
+CI runs analyze + tests on push (see `.github/workflows/ci.yml`).
+
+## Project identity
 
 | Field | Value |
 |-------|-------|
 | App name | **Trends** |
 | Dart package | `trends` |
 | Bundle ID | `com.trends.commerce` |
+| Firebase project | `trends-commerce-dev` |
 
-## Architecture
+## Tech stack
 
-- **State:** `flutter_bloc` (VGV standard)
-- **Layers:** Data → Domain → Business Logic → Presentation
-- **Reference:** [Flutter News Toolkit](https://github.com/VGVentures/news_toolkit)
+| Layer | Choice |
+|-------|--------|
+| UI | Flutter, Material 3, custom `app_ui` |
+| State | `flutter_bloc`, `formz` |
+| Routing | `go_router` |
+| Backend | Firebase Auth, Firestore, Cloud Functions |
+| Images | `cached_network_image` |
+| Lint | `very_good_analysis` |
 
-## Documentation
+## Roadmap (post-MVP)
 
-All architecture and planning docs live in [`cursor_analysis/`](./cursor_analysis/README.md):
+- Razorpay payment SDK + webhooks
+- Algolia search
+- FCM push notifications
+- Firebase App Check
+- App flavors (dev / staging / prod)
 
-- [Project identity](./cursor_analysis/01_project_identity.md)
-- [Flutter architecture](./cursor_analysis/02_flutter_architecture.md)
-- [Database design](./cursor_analysis/03_database_design.md)
-- [Firebase setup](./cursor_analysis/04_firebase_setup.md)
-- [External services](./cursor_analysis/05_external_services.md)
-- [MVP implementation plan](./cursor_analysis/06_mvp_implementation_plan.md)
-- [News Toolkit reference](./cursor_analysis/07_news_toolkit_reference.md)
+## License
 
-## Current Phase
-
-**Phase 1 — Full MVP:** Advanced VGV monorepo structure (`packages/`), all e-commerce features, Stitch UI. Phase 0 (foundation + Firebase) is complete.
-
-## Structure (target)
-
-```text
-lib/                    # Feature presentation (BLoC, views)
-packages/               # app_ui, repositories, clients
-functions/              # Cloud Functions
-cursor_analysis/        # Architecture docs
-```
+Private portfolio project. Contact the author for usage terms.

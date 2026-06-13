@@ -60,15 +60,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       return;
     }
 
-    var user = await _userRepository.getUser(authUser.id);
-    user ??= await _userRepository.ensureUserDocument(
-      userId: authUser.id,
-      email: authUser.email,
-      displayName: authUser.displayName,
-      photoUrl: authUser.photoUrl,
-    );
-
-    emit(AppState.authenticated(user));
+    try {
+      final user = await _userRepository.loadOrCreateUser(
+        userId: authUser.id,
+        email: authUser.email,
+        displayName: authUser.displayName,
+        photoUrl: authUser.photoUrl,
+      );
+      emit(AppState.authenticated(user));
+    } on UserRepositoryException catch (error, stackTrace) {
+      addError(error, stackTrace);
+    }
   }
 
   Future<void> _onSignOutRequested(

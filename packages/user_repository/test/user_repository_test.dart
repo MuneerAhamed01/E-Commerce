@@ -76,6 +76,20 @@ void main() {
       expect(cached?.email, 'cached@example.com');
     });
 
+    test('loadOrCreateUser creates profile when missing', () async {
+      final user = await repository.loadOrCreateUser(
+        userId: 'uid-6',
+        email: 'created@example.com',
+        displayName: 'Created User',
+      );
+
+      expect(user.id, 'uid-6');
+      expect(user.email, 'created@example.com');
+
+      final cached = await repository.getCachedUser('uid-6');
+      expect(cached?.displayName, 'Created User');
+    });
+
     test('updateUser merges fields and refreshes cache', () async {
       await repository.ensureUserDocument(
         userId: 'uid-5',

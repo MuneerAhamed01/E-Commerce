@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:trends/app/router/app_router.dart';
 import 'package:trends/catalog/bloc/catalog_cubit.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 
 class CatalogPage extends StatelessWidget {
   const CatalogPage({
@@ -87,6 +88,8 @@ class CatalogView extends StatelessWidget {
               onRetry: () => context.read<CatalogCubit>().loadCategory(
                 categoryId: categoryId,
               ),
+              onContactSupport: () =>
+                  TrendsErrorHandler.showContactSupport(context),
             );
           }
           if (state.products.isEmpty) {

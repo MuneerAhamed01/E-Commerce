@@ -8,6 +8,7 @@ import 'package:trends/auth/utils/form_field_errors.dart';
 import 'package:trends/auth/widgets/auth_scaffold.dart';
 import 'package:trends/auth/widgets/password_text_field.dart';
 import 'package:trends/auth/widgets/social_auth_section.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/sign_up/bloc/sign_up_bloc.dart';
 
 class SignUpView extends StatelessWidget {
@@ -20,11 +21,7 @@ class SignUpView extends StatelessWidget {
       listener: (context, state) {
         if (state.status == FormzSubmissionStatus.failure &&
             state.failure != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(state.failure!.message)),
-            );
+          TrendsErrorHandler.show(context, error: state.failure);
         }
       },
       child: AuthScaffold(

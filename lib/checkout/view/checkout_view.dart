@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:order_repository/order_repository.dart';
+import 'package:trends/core/errors/trends_error_handler.dart';
 import 'package:trends/app/bloc/app_bloc.dart';
 import 'package:trends/app/router/app_router.dart';
 import 'package:trends/cart/bloc/cart_bloc.dart';
@@ -34,15 +35,22 @@ class _CheckoutViewState extends State<CheckoutView> {
       listenWhen: (prev, curr) => prev.orderStatus != curr.orderStatus,
       listener: (context, state) {
         if (state.orderStatus == OrderPlacementStatus.success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Order placed successfully!')),
+          TrendsErrorHandler.showSuccess(
+            context,
+            'Order placed successfully!',
           );
           context.go(AppRoutes.orders);
         } else if (state.orderStatus == OrderPlacementStatus.failure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Could not place order. Try again.'),
-            ),
+          TrendsErrorHandler.showOrderFailure(
+            context,
+            onRetry: () {
+              final userId = context.read<AppBloc>().state.user?.id;
+              if (userId == null) return;
+              context.read<CheckoutCubit>().placeOrder(
+                userId: userId,
+                cart: cart,
+              );
+            },
           );
         }
       },
@@ -169,34 +177,42 @@ class _CheckoutViewState extends State<CheckoutView> {
                 ),
               ),
               const SizedBox(height: TrendsSpacing.sm),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(TrendsSpacing.md),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.credit_card_outlined),
-                      const SizedBox(width: TrendsSpacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Online Payment (Razorpay)',
-                              style: TrendsTypography.labelMedium(
-                                colorScheme.onSurface,
-                              ),
+              Opacity(
+                opacity: 0.55,
+                child: Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () =>
+                        TrendsErrorHandler.showPaymentUnavailable(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(TrendsSpacing.md),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.credit_card_outlined),
+                          const SizedBox(width: TrendsSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Online payment (coming soon)',
+                                  style: TrendsTypography.labelMedium(
+                                    colorScheme.onSurface,
+                                  ),
+                                ),
+                                Text(
+                                  'Razorpay — tap to learn more',
+                                  style: TrendsTypography.labelSmall(
+                                    colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'UPI, cards, net banking — manual step required',
-                              style: TrendsTypography.labelSmall(
-                                colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          const Icon(Icons.radio_button_unchecked),
+                        ],
                       ),
-                      const Icon(Icons.radio_button_unchecked),
-                    ],
+                    ),
                   ),
                 ),
               ),
