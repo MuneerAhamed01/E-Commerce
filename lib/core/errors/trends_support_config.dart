@@ -1,6 +1,6 @@
 /// Contact details shown when users hit errors or mock / preview features.
 abstract final class TrendsSupportConfig {
-  static const supportEmail = 'hello@trends.commerce';
+  static const supportEmail = 'muneerahamed.dev@gmail.com';
 
   static const supportHeadline = 'Need the full experience?';
 
